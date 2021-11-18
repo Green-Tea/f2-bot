@@ -1,0 +1,3 @@
+git+https://github.com/Shizmob/pydle.git
+beautifulsoup4
+requests
