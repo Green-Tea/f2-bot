@@ -1,18 +1,27 @@
+import logging
 import requests
 from bs4 import BeautifulSoup as soup
 import json
 import os
 
+logger = logging.getLogger("logs")
+logging.basicConfig(
+    format="%(message)s",
+    level=logging.INFO,
+    handlers=[logging.FileHandler("logs"), logging.StreamHandler()],
+)
+
 
 class randomPicker:
     def __init__(self, setting):
-
+        # Set song length parameters. It will be the same in all stages
         self.min_length = 90
         self.max_length = 295
         self.tb_min_length = 300
         self.tb_max_length = 420
         self.ar = (0.00, 10.00)
 
+        # Set parameters for stages and mods
         if setting == "ro64" or setting == "round of 64":
             self.nm_rate = (5.80, 6.00)
             self.hr_rate = (5.40, 5.70)
@@ -93,6 +102,7 @@ class randomPicker:
 
             raise ValueError("Invalid Stage")
 
+    # Apply corresponding parameters when mod is chosen
     def randomMapId(self, command):
 
         if command == "hd" or command == "nm":
@@ -131,6 +141,9 @@ class randomPicker:
         api_key = os.getenv("API_KEY")
 
         while True:
+            # osusearch returns 5 mapsets that should fit the parameters
+            # we only want the first one
+            # osusearch pls give me a way to randomly generate 1 mapID thx
             url = f"https://osusearch.com/random/?statuses=Ranked&modes=Standard&min_length={final_min_length}&max_length={final_max_length}&star={final_star_rate}&ar={final_approach_rate}"
             r = requests.get(url).text
             html = soup(r, "html.parser")
@@ -142,11 +155,15 @@ class randomPicker:
             r = requests.get(api_url)
             difficulties = json.loads(r.text)
 
+            # we have to loop through all difficulties in the set because we're given the ID of the entire mapset
             for difficulty in difficulties:
+
+                # pick the first map that falls within the star rating range
                 if float(difficulty["difficultyrating"]) == float(star_difficulty):
 
                     beatmap_id = difficulty["beatmap_id"]
 
+                    # need to make another request to determine star rating for difficulty changing mods
                     if command == "dt":
 
                         dt_url = f"https://osu.ppy.sh/api/get_beatmaps?k={api_key}&b={beatmap_id}&mods=64"
@@ -156,8 +173,9 @@ class randomPicker:
 
                         if dt_sr >= final_dt_range[0] and dt_sr <= final_dt_range[1]:
                             return beatmap_id
+
                         else:
-                            print(
+                            logger.info(
                                 f"Map ID: {beatmap_id}\nSR: {dt_sr}*\nDT difficulty out of range. Finding new map."
                             )
 
@@ -170,8 +188,9 @@ class randomPicker:
 
                         if hr_sr >= final_hr_range[0] and hr_sr <= final_hr_range[1]:
                             return beatmap_id
+
                         else:
-                            print(
+                            logger.info(
                                 f"Map ID: {beatmap_id}\nSR: {hr_sr}*\nHR difficulty out of range. Finding new map."
                             )
 
