@@ -2,7 +2,6 @@ import logging
 import requests
 from bs4 import BeautifulSoup as soup
 import json
-import os
 
 logger = logging.getLogger("logs")
 logging.basicConfig(
@@ -22,6 +21,8 @@ class randomPicker:
         self.ar = (0.00, 10.00)
 
         # Set parameters for stages and mods
+        # Keep in mind HR and DT settings must be set with nomod values
+        # I recommend going at least 1.2* lower for DT and 0.4* lower for HR
         if setting == "ro64" or setting == "round of 64":
             self.nm_rate = (5.80, 6.00)
             self.hr_rate = (5.40, 5.70)
@@ -138,7 +139,7 @@ class randomPicker:
         else:
             raise ValueError("Invalid mod settings")
 
-        api_key = os.getenv("API_KEY")
+        api_key = "Your API key here"
 
         while True:
             # osusearch returns 5 mapsets that should fit the parameters
@@ -155,7 +156,7 @@ class randomPicker:
             r = requests.get(api_url)
             difficulties = json.loads(r.text)
 
-            # we have to loop through all difficulties in the set because we're given the ID of the entire mapset
+            # loop through all difficulties in the set because we're given the ID of the entire mapset
             for difficulty in difficulties:
 
                 # pick the first map that falls within the star rating range
@@ -163,7 +164,7 @@ class randomPicker:
 
                     beatmap_id = difficulty["beatmap_id"]
 
-                    # need to make another request to determine star rating for difficulty changing mods
+                    # make another request to determine star rating for difficulty changing mods
                     if command == "dt":
 
                         dt_url = f"https://osu.ppy.sh/api/get_beatmaps?k={api_key}&b={beatmap_id}&mods=64"

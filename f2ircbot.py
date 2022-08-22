@@ -1,7 +1,5 @@
 import pydle
 import logging
-import os
-
 import refList
 import randomMapPicker
 
@@ -116,8 +114,8 @@ class MyOwnBot(pydle.Client):
 if __name__ == "__main__":
     server = "irc.ppy.sh"
     port = 6667
-    user = "Seaweed"
-    password = os.getenv("PASSWORD")
+    user = "Your Bancho username here"
+    password = "Your IRC password here"
 
     client = MyOwnBot(user, realname=user)
     client.run(server, port, tls=False, tls_verify=False, password=password)
