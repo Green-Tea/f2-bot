@@ -2,8 +2,9 @@
 
 - pydle
 - bs4
+- requests
 
-To install run `pip3 install pydle` and `pip3 install bs4`
+To install run `pip3 install pydle`  `pip3 install bs4` `pip3 install requests`
 
 ### Run
 
