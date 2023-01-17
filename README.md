@@ -19,6 +19,15 @@ If you have trouble running the bot, feel free to message me on discord: `Seawee
 - Put your api key in `randomMapPicker.py`
 - Adjust the parameters in `randomMapPicker.py` to your preference.
 
+## Usage
+
+- Run the bot and your account should be connected to the bancho irc
+- Open your irc client and make a multiplayer lobby
+- DM yourself with !join #mp_[mpID]
+- Select the stage you want to play using !f2 set [stage]
+- Select the mod you want to play using !f2 [mod]
+- Once done, make sure you close the lobby so the bot can stop listening to that channel
+
 ## IRC copy paste
 
 /query banchobot\
